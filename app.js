@@ -1,16 +1,31 @@
 const searchSongs = async() => {
     const searchText = document.getElementById('search-field').value
     const url = `https://api.lyrics.ovh/suggest/${searchText}`
-        //load data
-    const res = await fetch(url)
-    const data = await res.json()
-    displaySongs(data.data)
+    toggleSpinner()
+    try {
+        // load data
+        const res = await fetch(url)
+        const data = await res.json()
+        displaySongs(data.data)
 
+    } catch (error) {
+        displayError(error)
+    }
+
+    // fetch(url)
+    //     .then(res => res.json())
+    //     .then(data => displaySongs(data.data))
+    //     .catch(error => displayError('Something Went Wrong!! Please try again later!'))
+
+}
+
+const displayError = (error) => {
+    const errorTag = document.getElementById('error-message')
+    errorTag.innerText = error
 }
 
 const displaySongs = songs => {
     const songContainer = document.getElementById('song-container')
-    songContainer.innerHTML = ''
     const lyricsDiv = document.getElementById('song-lyrics')
     lyricsDiv.innerHTML = ''
     songs.forEach(song => {
@@ -32,14 +47,20 @@ const displaySongs = songs => {
         `
         songContainer.appendChild(songDiv)
     });
+    toggleSpinner()
 }
 
 const getLyric = async(artist, title) => {
     const url = `https://api.lyrics.ovh/v1/${artist}/${title}`
         // console.log(url)
-    const res = await fetch(url)
-    const data = await res.json()
-    displayLyrics(data.lyrics)
+    toggleSpinner()
+    try {
+        const res = await fetch(url)
+        const data = await res.json()
+        displayLyrics(data.lyrics)
+    } catch (error) {
+        displayError('Sorry I failed to load lyrics!')
+    }
 }
 
 const displayLyrics = lyrics => {
@@ -49,4 +70,13 @@ const displayLyrics = lyrics => {
     else {
         lyricsDiv.innerText = 'Not Found'
     }
+    toggleSpinner()
+}
+
+const toggleSpinner = () => {
+    const spinner = document.getElementById('loading-spinner')
+    const songs = document.getElementById('song-container')
+
+    spinner.classList.toggle('d-none')
+    songs.classList.toggle('d-none')
 }
