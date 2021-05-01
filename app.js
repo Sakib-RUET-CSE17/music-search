@@ -19,6 +19,16 @@ const searchSongs = async() => {
 
 }
 
+document.getElementById("search-field").addEventListener("keypress", function(event) {
+    console.log('Working!!!')
+        // event.preventDefault(); // stop default behaviour
+        // console.log('keycode', event.key, event.keyCode)
+    if (event.key == 'Enter') {
+        document.getElementById("search-button").click();
+    }
+
+})
+
 const displayError = (error) => {
     const errorTag = document.getElementById('error-message')
     errorTag.innerText = error
